@@ -37,8 +37,10 @@ case "$1" in
 		$FAKECHROOT_CROSS/bin/busybox chroot $WHERE /bin/sh
 		;;
 	apt)
+		shift;
+		_pkglist="$*"
 		$FAKECHROOT_CROSS/bin/busybox chroot $WHERE /usr/bin/apt-get update
-		$FAKECHROOT_CROSS/bin/busybox chroot $WHERE /usr/bin/apt-get install --yes --force-yes $PKGLIST
+		$FAKECHROOT_CROSS/bin/busybox chroot $WHERE /usr/bin/apt-get install --yes --force-yes $_pkglist
 		$FAKECHROOT_CROSS/bin/busybox chroot $WHERE /usr/bin/apt-get clean
 		;;
 	pack)
@@ -68,7 +70,7 @@ case "$1" in
 				--exclude='dev/*' * )
 		mkdir proc
 		tar rf rootfs.tar proc
-		tar Af rootfs.tar devs.tar
+		tar Af rootfs.tar /usr/lib/cross-shell/devs.tar
 		rmdir proc
 		;;
 esac
