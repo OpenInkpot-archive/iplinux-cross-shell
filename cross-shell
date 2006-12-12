@@ -1,0 +1,75 @@
+#!/bin/sh
+
+CONF_GLOBAL=/etc/cross-shell.conf
+CONF_LOCAL=~/.cross-shell
+if [ -f $CONF_LOCAL ]; then
+	source $CONF_LOCAL
+else
+	if [ -f $CONF_GLOBAL ]; then
+		source $CONF_GLOBAL
+	else
+		echo "Cannot find any configuration file, exiting."
+		exit 1
+	fi
+fi
+
+DEBOOTSTRAP=/usr/sbin/debootstrap
+BASEDIR=`pwd`
+CROSS_ARCH=$ARCH
+PATH=/usr/sbin:/sbin:${PATH}
+LD_LIBRARY_PATH=/lib:/usr/lib
+LD_PRELOAD=/usr/lib/fakechroot/libfakechroot.so:/usr/lib/libfakeroot/libfakeroot-sysv.so
+
+export CROSS_ARCH PATH FAKECHROOT_CROSS LD_LIBRARY_PATH LD_PRELOAD
+
+case "$1" in
+	bs)
+		$DEBOOTSTRAP --arch $ARCH $SUITE $WHERE file://$REPO/ $REPO/$SUITE
+		# configure apt
+		ln -s $REPO $WHERE/repo
+		echo "deb file:///repo $SUITE main" > $WHERE/etc/apt/sources.list
+		echo "APT::Architecture \"$ARCH\";" > $WHERE/etc/apt/apt.conf
+		# configure target
+		cat $FSTAB > $WHERE/etc/fstab
+		echo $HN > $WHERE/etc/hostname
+		;;
+	sh)
+		$FAKECHROOT_CROSS/bin/busybox chroot $WHERE /bin/sh
+		;;
+	apt)
+		$FAKECHROOT_CROSS/bin/busybox chroot $WHERE /usr/bin/apt-get update
+		$FAKECHROOT_CROSS/bin/busybox chroot $WHERE /usr/bin/apt-get install --yes --force-yes $PKGLIST
+		$FAKECHROOT_CROSS/bin/busybox chroot $WHERE /usr/bin/apt-get clean
+		;;
+	pack)
+		unset LD_PRELOAD
+		cat $FSTAB > $WHERE/etc/fstab
+		cat $INITTAB > $WHERE/etc/inittab
+		echo $HN > $WHERE/etc/hostname
+		
+		# set up a first-boot script to fix things for us
+		echo '#!/bin/sh' > $WHERE/etc/rcS.d/S00firstboot
+		cat $WHERE/tmp/fakechroot-owners | while read line; do
+			f=`echo $line | cut -d' ' -f3`
+			[ -f "$WHERE/$f" ] && echo $line
+		done >>	$WHERE/etc/rcS.d/S00firstboot
+		echo 'rm -f /etc/rcS.d/S00firstboot' >> \
+			$WHERE/etc/rcS.d/S00firstboot
+		chmod 755 $WHERE/etc/rcS.d/S00firstboot
+
+		# pack things
+		( cd $WHERE; \
+			tar cf ../rootfs.tar \
+				--owner 0 \
+				--group 0 \
+				--exclude=repo \
+				--exclude=proc \
+				--exclude=dev \
+				--exclude='dev/*' * )
+		mkdir proc
+		tar rf rootfs.tar proc
+		tar Af rootfs.tar devs.tar
+		rmdir proc
+		;;
+esac
+

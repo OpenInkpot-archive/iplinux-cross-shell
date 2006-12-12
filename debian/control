@@ -1,0 +1,13 @@
+Source: cross-shell
+Section: devel
+Maintainer: Alexander Shishkin <alexander.shishkin@siemens.com>
+Build-Depends: debhelper (>> 2.0.0)
+Standards-Version: 3.6.2
+
+Package: cross-shell
+Priority: optional
+Architecture: all
+Depends: debootstrap, fakechroot (>= 2.5-1.slind0), fakeroot
+Description: cross-bootstrapping tool
+ This is SLIND. The rest is TODO.
+

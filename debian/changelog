@@ -1,0 +1,6 @@
+cross-shell (0.1) unstable; urgency=low
+
+  * Forked fakechroot to fakechroot-cross branch.
+
+ -- Alexander Shishkin <alexander.shishkin@siemens.com>  Tue, 12 Dec 2006 14:38:53 +0300
+
