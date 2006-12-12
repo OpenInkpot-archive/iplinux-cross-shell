@@ -59,7 +59,7 @@ case "$1" in
 
 		# pack things
 		( cd $WHERE; \
-			tar cf ../rootfs.tar \
+			tar cf $OUTPUTDIR/rootfs.tar \
 				--owner 0 \
 				--group 0 \
 				--exclude=repo \
