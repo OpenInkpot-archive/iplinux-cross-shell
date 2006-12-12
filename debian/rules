@@ -29,10 +29,12 @@ binary-arch: install
 	dh_testdir
 	dh_testroot
 
+	mkdir -p $(dir)/usr/lib/$(pkg)
 	mkdir -p $(dir)/usr/bin
 	mkdir -p $(dir)/etc
 	cp cross-shell $(dir)/usr/bin
 	cp cross-shell.conf $(dir)/etc
+	cp devs.tar $(dir)/usr/lib/$(pkg)
 	#$(MAKE) install DESTDIR=$(dir)
 	dh_installchangelogs
 	
