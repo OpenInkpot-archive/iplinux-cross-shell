@@ -61,7 +61,7 @@ case "$1" in
 
 		# pack things
 		( cd $WHERE; \
-			tar cf $OUTPUTDIR/rootfs.tar \
+			tar cf $OUTPUTDIR/rootfs-$ARCH.tar \
 				--owner 0 \
 				--group 0 \
 				--exclude=repo \
@@ -69,8 +69,8 @@ case "$1" in
 				--exclude=dev \
 				--exclude='dev/*' * )
 		mkdir proc
-		tar rf rootfs.tar proc
-		tar Af rootfs.tar /usr/lib/cross-shell/devs.tar
+		tar rf rootfs-$ARCH.tar proc
+		tar Af rootfs-$ARCH.tar /usr/lib/cross-shell/devs.tar
 		rmdir proc
 		;;
 esac
