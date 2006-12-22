@@ -55,6 +55,7 @@ case "$1" in
 			f=`echo $line | cut -d' ' -f3`
 			[ -f "$WHERE/$f" ] && echo $line
 		done >>	$WHERE/etc/rcS.d/S00firstboot
+		cat $WHERE/tmp/fakechroot-nodes >> $WHERE/etc/rcS.d/S00firstboot
 		echo 'rm -f /etc/rcS.d/S00firstboot' >> \
 			$WHERE/etc/rcS.d/S00firstboot
 		chmod 755 $WHERE/etc/rcS.d/S00firstboot
