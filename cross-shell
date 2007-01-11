@@ -1,12 +1,12 @@
-#!/bin/sh
+#!/bin/sh -e
 
 CONF_GLOBAL=/etc/cross-shell.conf
 CONF_LOCAL=~/.cross-shell
 if [ -f $CONF_LOCAL ]; then
-	source $CONF_LOCAL
+	. $CONF_LOCAL
 else
 	if [ -f $CONF_GLOBAL ]; then
-		source $CONF_GLOBAL
+		. $CONF_GLOBAL
 	else
 		echo "Cannot find any configuration file, exiting."
 		exit 1
@@ -24,10 +24,20 @@ export CROSS_ARCH PATH FAKECHROOT_CROSS LD_LIBRARY_PATH LD_PRELOAD
 
 case "$1" in
 	bs)
-		$DEBOOTSTRAP --arch $ARCH $SUITE $WHERE file://$REPO/ $REPO/$SUITE
+		# existing /proc generates strange errors during re-run of debootstrap
+		test -L $WHERE/proc && rm $WHERE/proc
+		if [ "${REPO#http*:}" = "$REPO" ]; then
+			$DEBOOTSTRAP --arch $ARCH $SUITE $WHERE $REPO ${REPO#file://}/$SUITE
+			ln -s $REPO $WHERE/repo
+		else
+			if ! [ -f $WHERE/repo/$SUITE ]; then
+				mkdir -p $WHERE/repo
+				wget $REPO/$SUITE -O $WHERE/repo/$SUITE
+			fi
+			$DEBOOTSTRAP --arch $ARCH $SUITE $WHERE $REPO $WHERE/repo/$SUITE
+		fi
 		# configure apt
-		ln -s $REPO $WHERE/repo
-		echo "deb file:///repo $SUITE main" > $WHERE/etc/apt/sources.list
+		echo "deb $REPO $SUITE main" > $WHERE/etc/apt/sources.list
 		echo "APT::Architecture \"$ARCH\";" > $WHERE/etc/apt/apt.conf
 		# configure target
 		cat $FSTAB > $WHERE/etc/fstab
