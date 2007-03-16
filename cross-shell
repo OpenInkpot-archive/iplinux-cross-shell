@@ -44,7 +44,9 @@ case "$1" in
 		echo $HN > $WHERE/etc/hostname
 		;;
 	sh)
-		$FAKECHROOT_CROSS/bin/busybox chroot $WHERE /bin/sh
+		shift
+		_cmd="$*"
+		$FAKECHROOT_CROSS/bin/busybox chroot $WHERE $_cmd
 		;;
 	apt)
 		shift;
