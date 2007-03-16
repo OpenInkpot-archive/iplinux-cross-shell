@@ -7,7 +7,7 @@ Standards-Version: 3.6.2
 Package: cross-shell
 Priority: optional
 Architecture: all
-Depends: debootstrap, fakechroot (>= 2.5-1.slind0), fakeroot
+Depends: debootstrap, libfakechroot-cross (>= 2.5-1.slind0), fakeroot
 Description: cross-bootstrapping tool
  This is SLIND. The rest is TODO.
 

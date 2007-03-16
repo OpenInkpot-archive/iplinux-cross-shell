@@ -1,3 +1,10 @@
+cross-shell (0.2) unstable; urgency=low
+
+  * New version.
+  * Changed dependency to libfakechroot-cross.
+
+ -- Alexander Shishkin <virtuoso@slind.org>  Fri, 16 Mar 2007 16:37:14 +0300
+
 cross-shell (0.1) unstable; urgency=low
 
   * Forked fakechroot to fakechroot-cross branch.
