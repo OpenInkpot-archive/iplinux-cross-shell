@@ -1,10 +1,11 @@
 Source: cross-shell
-Section: devel
+Section: host-tools
 Maintainer: Alexander Shishkin <virtuoso@slind.org>
 Build-Depends: debhelper (>> 2.0.0)
 Standards-Version: 3.6.2
 
 Package: cross-shell
+Section: host-tools
 Priority: optional
 Architecture: all
 Depends: debootstrap, libfakechroot-cross (>= 2.5-1.slind0), fakeroot
