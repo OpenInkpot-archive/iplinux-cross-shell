@@ -18,7 +18,7 @@ BASEDIR=`pwd`
 CROSS_ARCH=$ARCH
 PATH=/usr/sbin:/sbin:${PATH}
 LD_LIBRARY_PATH=/lib:/usr/lib
-LD_PRELOAD=/usr/lib/fakechroot/libfakechroot.so:/usr/lib/libfakeroot/libfakeroot-sysv.so
+LD_PRELOAD=/usr/lib/fakechroot-cross/libfakechroot-cross.so:/usr/lib/libfakeroot/libfakeroot-sysv.so
 
 export CROSS_ARCH PATH FAKECHROOT_CROSS LD_LIBRARY_PATH LD_PRELOAD
 
@@ -27,14 +27,14 @@ case "$1" in
 		# existing /proc generates strange errors during re-run of debootstrap
 		test -L $WHERE/proc && rm $WHERE/proc
 		if [ "${REPO#http*:}" = "$REPO" ]; then
-			$DEBOOTSTRAP --arch $ARCH $SUITE $WHERE $REPO ${REPO#file://}/$SUITE
+			$DEBOOTSTRAP --components=core --arch $ARCH $SUITE $WHERE $REPO ${REPO#file://}/$SUITE
 			ln -s $REPO $WHERE/repo
 		else
 			if ! [ -f $WHERE/repo/$SUITE ]; then
 				mkdir -p $WHERE/repo
-				wget $REPO/$SUITE -O $WHERE/repo/$SUITE
+				cp /usr/lib/slind-core/debootstrap/$SUITE $WHERE/repo/$SUITE
 			fi
-			$DEBOOTSTRAP --arch $ARCH $SUITE $WHERE $REPO $WHERE/repo/$SUITE
+			$DEBOOTSTRAP --components=core --arch $ARCH $SUITE $WHERE $REPO $WHERE/repo/$SUITE
 		fi
 		# configure apt
 		echo "deb $REPO $SUITE main" > $WHERE/etc/apt/sources.list
