@@ -53,22 +53,36 @@ PATH=/usr/sbin:/sbin:${PATH}
 LD_LIBRARY_PATH=/lib:/usr/lib
 LD_PRELOAD=/usr/lib/fakechroot-cross/libfakechroot-cross.so:/usr/lib/libfakeroot/libfakeroot-sysv.so
 
-export CROSS_ARCH PATH FAKECHROOT_CROSS LD_LIBRARY_PATH LD_PRELOAD
+# If target architecture equals host architecture, we don't need any
+# preloads or special munglings.
+if [ "x$ARCH" = "x$HOSTARCH" ]; then
+    unset LD_PRELOAD 
+    export CROSS_ARCH PATH FAKECHROOT_CROSS
+else
+    export CROSS_ARCH PATH FAKECHROOT_CROSS LD_LIBRARY_PATH LD_PRELOAD
+fi
 
 case "$1" in
 	bs)
-		# existing /proc generates strange errors during re-run of debootstrap
-		test -L $WHERE/proc && rm $WHERE/proc
-		if [ "${REPO#http*:}" = "$REPO" ]; then
-			$DEBOOTSTRAP --components=core --arch $ARCH $SUITE $WHERE $REPO ${REPO#file://}/$SUITE
-			ln -s $REPO $WHERE/repo
-		else
-			if ! [ -f $WHERE/repo/$SUITE ]; then
-				mkdir -p $WHERE/repo
-				cp /usr/lib/slind-core/debootstrap/$SUITE $WHERE/repo/$SUITE
-			fi
-			$DEBOOTSTRAP --components=core --arch $ARCH $SUITE $WHERE $REPO $WHERE/repo/$SUITE
+		if [ "x$ARCH" != "x$HOSTARCH" ]; then
+		    # We skip this whole bootstrap shebang if arch is equal to
+		    # hostarch, assuming slindctl (or someone else) has already
+		    # ran debootstrap into $FAKECHROOT_CROSS.
+		    
+		    # existing /proc generates strange errors during re-run of debootstrap
+		    test -L $WHERE/proc && rm $WHERE/proc
+		    if [ "${REPO#http*:}" = "$REPO" ]; then
+			    $DEBOOTSTRAP --components=core --arch $ARCH $SUITE $WHERE $REPO ${REPO#file://}/$SUITE
+			    ln -s $REPO $WHERE/repo
+		    else
+			    if ! [ -f $WHERE/repo/$SUITE ]; then
+				    mkdir -p $WHERE/repo
+				    cp /usr/lib/slind-core/debootstrap/$SUITE $WHERE/repo/$SUITE
+			    fi
+			    $DEBOOTSTRAP --components=core --arch $ARCH $SUITE $WHERE $REPO $WHERE/repo/$SUITE
+		    fi
 		fi
+
 		# configure apt
 		echo "deb $REPO $SUITE core" > $WHERE/etc/apt/sources.list
 		echo "APT::Architecture \"$ARCH\";" > $WHERE/etc/apt/apt.conf
