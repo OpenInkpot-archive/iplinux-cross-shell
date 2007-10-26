@@ -35,12 +35,16 @@ else
         exit 1
 fi
 
-FSTAB=`conf_get_var_relaxed $SLIND_DEF_CONFIG cross-shell chr_tgt_fstab`
-INITTAB=`conf_get_var_relaxed $SLIND_DEF_CONFIG cross-shell chr_tgt_inittab`
-HN=`conf_get_var_strict $SLIND_DEF_CONFIG cross-shell tgt_hostname`
-OUTPUTDIR=`conf_get_var_strict $SLIND_DEF_CONFIG cross-shell chr_tgt_image_dir`
-SUITE=`conf_get_var_strict $SLIND_DEF_CONFIG common slind_suite`
-REPO=`conf_get_var_strict $SLIND_DEF_CONFIG common slind_mirror`
+load_slind_config_common
+load_slind_config_maintainer_common
+load_suites_config
+
+FSTAB=`conf_get_var_relaxed $SLIND_CONFIG cross-shell chr_tgt_fstab`
+INITTAB=`conf_get_var_relaxed $SLIND_CONFIG cross-shell chr_tgt_inittab`
+HN=`conf_get_var_strict $SLIND_CONFIG cross-shell tgt_hostname`
+OUTPUTDIR=`conf_get_var_strict $SLIND_CONFIG cross-shell chr_tgt_image_dir`
+SUITE=`conf_get_var_strict $SLIND_CONFIG common slind_suite`
+REPO=`conf_get_var_strict $SLIND_CONFIG common slind_mirror`
 
 HOSTARCH=`dpkg --print-architecture`
 ARCH="$2"
