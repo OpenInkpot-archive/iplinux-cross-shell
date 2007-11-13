@@ -88,7 +88,7 @@ case "$1" in
 		fi
 
 		# configure apt
-		echo "deb $REPO $SUITE core" > $WHERE/etc/apt/sources.list
+		echo "deb $REPO $SUITE core security debug gui" > $WHERE/etc/apt/sources.list
 		echo "APT::Architecture \"$ARCH\";" > $WHERE/etc/apt/apt.conf
 		# configure target
 		if [ -f "$FSTAB" ]; then
