@@ -54,37 +54,31 @@ DEBOOTSTRAP=/usr/sbin/debootstrap
 BASEDIR=`pwd`
 CROSS_ARCH=$ARCH
 PATH=/usr/sbin:/sbin:${PATH}
-LD_LIBRARY_PATH=/lib:/usr/lib
 LD_PRELOAD=/usr/lib/fakechroot-cross/libfakechroot-cross.so:/usr/lib/libfakeroot/libfakeroot-sysv.so
 
-# If target architecture equals host architecture, we don't need any
-# preloads or special munglings.
-if [ "x$ARCH" = "x$HOSTARCH" ]; then
-    unset LD_PRELOAD 
-    export CROSS_ARCH PATH FAKECHROOT_CROSS
-else
-    export CROSS_ARCH PATH FAKECHROOT_CROSS LD_LIBRARY_PATH LD_PRELOAD
-fi
+export CROSS_ARCH PATH FAKECHROOT_CROSS LD_PRELOAD
 
 case "$1" in
 	bs)
-		if [ "x$ARCH" != "x$HOSTARCH" ]; then
+		if [ "x$ARCH" = "x$HOSTARCH" ]; then
 		    # We skip this whole bootstrap shebang if arch is equal to
 		    # hostarch, assuming slindctl (or someone else) has already
 		    # ran debootstrap into $FAKECHROOT_CROSS.
+		    DEBOOTSTRAP=:
+	        fi
 		    
-		    # existing /proc generates strange errors during re-run of debootstrap
-		    test -L $WHERE/proc && rm $WHERE/proc
-		    if [ "${REPO#http*:}" = "$REPO" ]; then
-			    $DEBOOTSTRAP --components=core --arch $ARCH $SUITE $WHERE $REPO ${REPO#file://}/$SUITE
-			    ln -s $REPO $WHERE/repo
-		    else
-			    if ! [ -f $WHERE/repo/$SUITE ]; then
-				    mkdir -p $WHERE/repo
-				    cp /usr/lib/slind-core/debootstrap/$SUITE $WHERE/repo/$SUITE
-			    fi
-			    $DEBOOTSTRAP --components=core --arch $ARCH $SUITE $WHERE $REPO $WHERE/repo/$SUITE
-		    fi
+		# existing /proc generates strange errors during re-run of debootstrap
+		test -L $WHERE/proc && rm $WHERE/proc
+		if [ "${REPO#file:}" != "$REPO" ]; then
+		        $DEBOOTSTRAP --components=core --arch $ARCH $SUITE $WHERE $REPO ${REPO#file://}/$SUITE
+			ln -s ${REPO#file://} $WHERE/repo
+			REPO=file:///repo
+		else
+		        if ! [ -f $WHERE/repo/$SUITE ]; then
+			    mkdir -p $WHERE/repo
+			    cp /usr/lib/slind-core/debootstrap/$SUITE $WHERE/repo/$SUITE
+		        fi
+		        $DEBOOTSTRAP --components=core --arch $ARCH $SUITE $WHERE $REPO $WHERE/repo/$SUITE
 		fi
 
 		# configure apt
@@ -101,14 +95,7 @@ case "$1" in
 	sh)
 		shift; shift;
 		_cmd="$*"
-		$FAKECHROOT_CROSS/bin/busybox chroot $WHERE $_cmd
-		;;
-	apt)
-		shift; shift;
-		_pkglist="$*"
-		$FAKECHROOT_CROSS/bin/busybox chroot $WHERE /usr/bin/apt-get update
-		$FAKECHROOT_CROSS/bin/busybox chroot $WHERE /usr/bin/apt-get install --yes --force-yes $_pkglist
-		$FAKECHROOT_CROSS/bin/busybox chroot $WHERE /usr/bin/apt-get clean
+		$FAKECHROOT_CROSS/lib/ld-linux.so.2 --library-path $FAKECHROOT_CROSS/usr/local/lib:$FAKECHROOT_CROSS/lib:$FAKECHROOT_CROSS/usr/lib  $FAKECHROOT_CROSS/bin/busybox chroot $WHERE $_cmd
 		;;
 	pack)
 		unset LD_PRELOAD
