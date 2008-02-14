@@ -1,3 +1,27 @@
+cross-shell (0.2.1) unstable; urgency=low
+
+  * New version.
+
+  [ Alexander Shishkin ]
+  * updated section header to host-tools
+  * add security, debug and gui components to target sources.list
+
+  [ Dmitry Baryshkov ]
+  * cross-shell: Cleanup host == target case handling Drop cross-shell apt,
+  it's better be handled inside slindctl
+
+  [ Maxim Osipov ]
+  * New fakechroot support, debootstrap fixes.
+  * Add description, fix non-existing files
+  * Fix cross-shell to support new configuration style
+  * Minor fix for cross-shell
+
+  [ Wartan Hachaturow ]
+  * Support for target architecture being equal to host architecture
+  * Correct new configuration file API usage
+
+ -- Alexander Shishkin <virtuoso@slind.org>  Thu, 14 Feb 2008 12:42:37 +0300
+
 cross-shell (0.2) unstable; urgency=low
 
   * New version.
