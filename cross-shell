@@ -13,7 +13,7 @@
 . /usr/share/cross-shell/shared-mounts
 
 usage() {
-    echo "cross-shell: <arch> <command ....>"
+    echo "Usage: cross-shell <arch> <command ....>"
 }
 
 if [ $# -eq 0 ]; then
