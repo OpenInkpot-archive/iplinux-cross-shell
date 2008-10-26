@@ -1,3 +1,10 @@
+cross-shell (0.2.1.oi2) asimov; urgency=low
+
+  * Removed slind-core dependency: no longer uses it's configuration
+    system.
+
+ -- Mikhail Gusarov <dottedmag@dottedmag.net>  Mon, 27 Oct 2008 03:44:00 +0600
+
 cross-shell (0.2.1.oi1) asimov; urgency=low
 
   * New version.

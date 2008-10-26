@@ -8,6 +8,6 @@ Package: cross-shell
 Section: host-tools
 Priority: optional
 Architecture: all
-Depends: debootstrap (>= 0.3.3.2etch1.oi1), libfakechroot-cross (>= 2.5-1.slind0), fakeroot, slind-core
+Depends: debootstrap (>= 0.3.3.2etch1.oi1), libfakechroot-cross (>= 2.5-1.slind0), fakeroot
 Description: cross-bootstrapping tool
  This is SLIND. The rest is TODO.
