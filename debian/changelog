@@ -1,3 +1,9 @@
+cross-shell (0.2.1.oi3) UNRELEASED; urgency=low
+
+  * Fixed cross-shell usage message.
+
+ -- Mikhail Gusarov <dottedmag@dottedmag.net>  Mon, 27 Oct 2008 04:44:09 +0600
+
 cross-shell (0.2.1.oi2) asimov; urgency=low
 
   * Removed slind-core dependency: no longer uses it's configuration
