@@ -1,3 +1,22 @@
+cross-shell (0.2.1.oi1) asimov; urgency=low
+
+  * New version.
+  * Added debian/copyright.
+  * Removed cross-shell.conf, unused.
+  * cross-shell, slind-core, slind-control reorganization:
+    - Added /etc/cross-shell/config as a part of getting rid of
+      slind-core. This config file contains settings necessary for
+      cross-shell functioning.
+    - cross-sh split into cross-sh and cross-bs. 'pack' functionality
+      moved to sc-pack-rootfs, because it is not related to cross-shell.
+      - devs.tar, add-dev.sh are moved to slind-control.
+    - bumped debootstrap dependency - cross-bs needs debootstrap with
+      'asimov' script.
+  
+  * debian/rules rewritten using debhelper.
+
+ -- Mikhail Gusarov <dottedmag@dottedmag.net>  Mon, 27 Oct 2008 02:16:05 +0600
+
 cross-shell (0.2.1) unstable; urgency=low
 
   * New version.

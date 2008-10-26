@@ -1,0 +1,4 @@
+config etc/cross-shell
+cross-bs usr/bin
+cross-shell usr/bin
+shared-mounts usr/share/cross-shell

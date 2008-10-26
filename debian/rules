@@ -1,48 +1,33 @@
 #!/usr/bin/make -f
 
-pkg := cross-shell
-dir := debian/$(pkg)
-
-configure:
-	dh_testdir
-
 clean:
 	dh_testdir
-	#$(MAKE) clean
+	dh_clean
 
-	rm -f debian/substvars build-stamp debian/files
-	rm -rf $(dir)
-
-build: build-stamp configure
-build-stamp:
-	#$(MAKE)
-	touch $@
+build:
 
 install: build
 	dh_testdir
 	dh_testroot
-
 	dh_clean -k
+
 	dh_installdirs
+	dh_install
 
 binary-arch: install
 	dh_testdir
 	dh_testroot
 
-	mkdir -p $(dir)/usr/lib/$(pkg)
-	mkdir -p $(dir)/usr/bin
-	mkdir -p $(dir)/etc
-	cp cross-shell $(dir)/usr/bin
-	cp cross-shell.conf $(dir)/etc
-	cp devs.tar $(dir)/usr/lib/$(pkg)
-	#$(MAKE) install DESTDIR=$(dir)
+	dh_installdocs
 	dh_installchangelogs
-	
+	dh_link
+	dh_compress
+	dh_fixperms
 	dh_installdeb
 	dh_gencontrol
 	dh_md5sums
 	dh_builddeb
-	
+
 binary: binary-arch
 
 .PHONY: configure clean build install binary-arch binary

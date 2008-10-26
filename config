@@ -1,0 +1,11 @@
+echo "ERROR: set up /etc/cross-shell/config first." >&2
+exit 1
+
+# OpenInkpot archive suite
+SUITE=asimov
+
+# OpenInkpot repository URL
+REPO=http://openinkpot.org/pub/oi
+
+# root gaining command (e.g. sudo)
+ROOT_CMD=sudo

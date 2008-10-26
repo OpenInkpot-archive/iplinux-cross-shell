@@ -1,0 +1,12 @@
+try_bind_umount() {
+    RET=$?
+    while $ROOT_CMD umount $_shared_mounts_MOUNTPOINT 2>/dev/null; do :; done
+    return $RET
+}
+
+try_bind_mount() {
+    fgrep -q $2 < /etc/mtab || $ROOT_CMD mount --bind $1 $2
+
+    _shared_mounts_MOUNTPOINT=$2
+    trap try_bind_umount 0 INT QUIT KILL TERM
+}
