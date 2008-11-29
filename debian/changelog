@@ -1,5 +1,7 @@
-cross-shell (0.2.1.oi3) UNRELEASED; urgency=low
+cross-shell (0.2.1.oi3) asimov; urgency=low
 
+  * Added /etc/hosts generation - apt in /rootfs-* fails if sources point
+    to the localhost and /etc/hosts is not present.
   * Fixed cross-shell usage message.
 
  -- Mikhail Gusarov <dottedmag@dottedmag.net>  Mon, 27 Oct 2008 04:44:09 +0600
