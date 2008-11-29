@@ -47,6 +47,7 @@ try_bind_mount $HOST_ARCHIVES $ARCHIVES
 if [ $HOSTARCH = $ARCH ]; then
     $ROOT_CMD /usr/sbin/debootstrap --components=core \
         $SUITE $ROOTFS $REPO
+    echo "127.0.0.1 localhost localhost.localdomain" > $ROOTFS/etc/hosts
 else
     PATH=$PATH:/usr/sbin:/sbin
     FAKECHROOT_CROSS=/rootfs-$HOSTARCH
@@ -57,4 +58,5 @@ else
 
     /usr/sbin/debootstrap --components=core --arch $ARCH \
         $SUITE $ROOTFS $REPO
+    echo "127.0.0.1 localhost localhost.localdomain" > $ROOTFS/etc/hosts
 fi
