@@ -1,3 +1,9 @@
+cross-shell (0.2.1.oi4) asimov; urgency=low
+
+  * Fixed cross-bs $HOST, broken in last version.
+
+ -- Mikhail Gusarov <dottedmag@dottedmag.net>  Sat, 29 Nov 2008 19:50:06 +0600
+
 cross-shell (0.2.1.oi3) asimov; urgency=low
 
   * Added /etc/hosts generation - apt in /rootfs-* fails if sources point
