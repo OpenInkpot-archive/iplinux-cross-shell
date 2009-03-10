@@ -1,13 +1,13 @@
 Source: cross-shell
-Section: host-tools
+Section: host/tools
 Maintainer: Mikhail Gusarov <dottedmag@dottedmag.net>
-Build-Depends: debhelper (>> 2.0.0)
-Standards-Version: 3.6.2
+Build-Depends: debhelper (>> 7)
+Standards-Version: 3.8.0
 
 Package: cross-shell
-Section: host-tools
 Priority: optional
 Architecture: all
-Depends: debootstrap (>= 0.3.3.2etch1.oi1), libfakechroot-cross (>= 2.5-1.slind0), fakeroot
+Depends: debootstrap (>= 1.0.10.oi1), libfakechroot-cross (>= 2.8-1), fakeroot
 Description: cross-bootstrapping tool
- This is SLIND. The rest is TODO.
+ cross-shell creates rootfs for non-native CPU architectures without using qemu
+ or other emulator.

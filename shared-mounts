@@ -1,3 +1,5 @@
+# -*- mode: sh -*-
+
 try_bind_umount() {
     RET=$?
     while $ROOT_CMD umount $_shared_mounts_MOUNTPOINT 2>/dev/null; do :; done

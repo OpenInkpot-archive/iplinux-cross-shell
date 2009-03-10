@@ -1,0 +1,47 @@
+#!/bin/sh
+set -e
+
+. /etc/cross-shell/config
+. /usr/share/cross-shell/shared-mounts
+
+PROG="${PROG:-${0##*/}}"
+
+if [ $# -ne 0 ]; then
+    echo "Usage: $PROG"
+    exit 1
+fi
+
+# for debootstrap
+PATH=$PATH:/usr/sbin
+
+HOSTARCH=`dpkg --print-architecture`
+if [ -z "$HOSTARCH" ]; then
+    echo "ERROR: can't detect host architecture"
+    exit 1
+fi
+
+ROOTFS="/rootfs-$HOSTARCH"
+if [ -e "$ROOTFS" ]; then
+    echo "ERROR: $ROOTFS already exists. Delete it before running $PROG."
+    exit 1
+fi
+
+echo "=== bootstrap host ==="
+
+$ROOT_CMD mkdir -p $ROOTFS
+
+ARCHIVES=$ROOTFS/var/cache/apt/archives
+HOST_ARCHIVES=/var/cache/apt/archives
+
+$ROOT_CMD mkdir -p $HOST_ARCHIVES
+$ROOT_CMD mkdir -p $ARCHIVES
+
+try_bind_mount $HOST_ARCHIVES $ARCHIVES
+
+$ROOT_CMD /usr/sbin/debootstrap --components=core \
+    $SUITE $ROOTFS $REPO
+$ROOT_CMD sh -c "echo '127.0.0.1 localhost localhost.localdomain' > $ROOTFS/etc/hosts"
+
+# suid ldconfig binary, otherwise we won't be able to run it as build user
+# inside chroot.
+$ROOT_CMD chmod u+s $ROOTFS/sbin/ldconfig

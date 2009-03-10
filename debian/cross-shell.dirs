@@ -1,3 +1,4 @@
 etc/cross-shell
 usr/bin
 usr/share/cross-shell
+usr/lib/cross-shell

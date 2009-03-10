@@ -1,4 +1,8 @@
 config etc/cross-shell
-cross-bs usr/bin
+cross-bootstrap-host usr/bin
+cross-bootstrap-target usr/bin
 cross-shell usr/bin
+cross-pack-rootfs usr/bin
 shared-mounts usr/share/cross-shell
+devs.tar usr/lib/cross-shell
+min-devs.tar usr/lib/cross-shell

@@ -8,7 +8,7 @@ Authors:
 Copyright holders:
 
   © 2006-2007 Siemens AG
-  © 2008 Mikhail Gusarov <dottedmag@dottedmag.net>
+  © 2008-2009 Mikhail Gusarov <dottedmag@dottedmag.net>
 
 License:
 
@@ -28,7 +28,7 @@ License:
 On Debian systems, the complete text of the GNU General Public License version 2
 can be found in /usr/share/common-licenses/GPL-2 file.
 
-The OpenInkpot packaging is
+The IPlinux packaging is
   © 2006-2007 Siemens AG
-  © 2008, Mikhail Gusarov <dottedmag@dottedmag.net>
+  © 2008-2009 Mikhail Gusarov <dottedmag@dottedmag.net>
 and is licensed under the GPL version 2, see `/usr/share/common-licenses/GPL-2'.

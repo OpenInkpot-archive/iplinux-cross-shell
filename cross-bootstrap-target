@@ -1,0 +1,74 @@
+#!/bin/sh
+set -e
+
+. /etc/cross-shell/config
+. /usr/share/cross-shell/shared-mounts
+
+PROG="${PROG:-${0##*/}}"
+
+if [ $# -ne 1 ]; then
+    echo "Usage: $PROG <arch>"
+    exit 1
+fi
+
+ARCH="$1"
+
+HOSTARCH=$(dpkg --print-architecture)
+if [ -z "$HOSTARCH" ]; then
+    echo "ERROR: can't detect host architecture"
+    exit 1
+fi
+
+if [ ! -d "/rootfs-$HOSTARCH" ]; then
+    echo "ERROR: /rootfs-$HOSTARCH does not exist, unable to perform a cross-bootstrap."
+    echo "ERROR: run cross-bootstrap-host before."
+    exit 1
+fi
+
+ROOTFS=/rootfs-$ARCH
+
+if [ -e "$ROOTFS" ]; then
+    echo "ERROR: $ROOTFS already exists. Delete it before running $PROG."
+    exit 1
+fi
+
+echo "=== bootstrap target ==="
+
+GID=$(id -g)
+
+$ROOT_CMD mkdir -p $ROOTFS
+$ROOT_CMD chown -R $UID:$GID $ROOTFS
+
+ARCHIVES=$ROOTFS/var/cache/apt/archives
+HOST_ARCHIVES=/var/cache/apt/archives-$ARCH
+
+$ROOT_CMD mkdir -p $HOST_ARCHIVES
+$ROOT_CMD chown -R $UID:$GID $HOST_ARCHIVES
+mkdir -p $ARCHIVES
+
+try_bind_mount $HOST_ARCHIVES $ARCHIVES
+
+(
+    PATH=$PATH:/usr/sbin:/sbin
+    FAKECHROOT_CROSS=/rootfs-$HOSTARCH
+    CROSS_SHELL_ARCH=$ARCH
+    LD_PRELOAD=/usr/lib/fakechroot-cross/libfakechroot-cross.so
+    LD_PRELOAD=$LD_PRELOAD:/usr/lib/libfakeroot/libfakeroot-sysv.so
+    export CROSS_SHELL_ARCH PATH FAKECHROOT_CROSS LD_PRELOAD
+
+    /usr/sbin/debootstrap --components=core --arch $ARCH $SUITE $ROOTFS $REPO
+)
+
+echo "127.0.0.1 localhost localhost.localdomain" > $ROOTFS/etc/hosts
+
+echo "deb $REPO $SUITE core security gui media" > $ROOTFS/etc/apt/sources.list
+echo "APT::Architecture \"$ARCH\";" > $ROOTFS/etc/apt/apt.conf
+if [ -n "$http_proxy" ]; then
+    echo "Acquire::http::Proxy \"$http_proxy\";" >> $ROOTFS/etc/apt/apt.conf
+fi
+if [ -n "$ftp_proxy" ]; then
+    echo "Acquire::ftp::Proxy \"$ftp_proxy\";" >> $ROOTFS/etc/apt/apt.conf
+fi
+echo ip > $ROOTFS/etc/hostname
+
+cross-shell $ARCH apt-get update

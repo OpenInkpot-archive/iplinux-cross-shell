@@ -1,0 +1,74 @@
+#!/bin/sh
+set -e
+
+#
+# Poor man's cross-shell pack:
+#
+# - allows to set up output filename
+# - does not touch /etc/fstab
+# - does not touch /etc/inittab
+# - does not touch /etc/hostname
+#
+
+usage() {
+    echo "Usage: cross-pack-rootfs [--full-dev] <arch> [<outfile>]"
+    exit 1
+}
+
+case "$1" in
+    "--full-dev")
+        full_dev=1
+        shift
+        ;;
+    "--*")
+        usage
+esac
+
+if [ $# -lt 1 -o $# -gt 2 ]; then
+    usage
+fi
+
+ARCH="$1"
+
+if [ -z "$2" ]; then
+    OUTFILE="/build/rootfs-$ARCH.tar"
+else
+    OUTFILE="$2"
+    if [ "x"`echo $OUTFILE | cut -c1` != "x/" ]; then
+        # make <outfile> absolute
+        OUTFILE=`pwd`/"$OUTFILE"
+    fi
+fi
+
+WHERE="/rootfs-$ARCH"
+
+if [ ! -d "$WHERE" ]; then
+    yell "ERROR: /rootfs-$ARCH does not exist or not a directory"
+    exit 1
+fi
+
+echo "=== pack rootfs ==="
+
+(cd "$WHERE";
+  tar cf "$OUTFILE" \
+    --exclude=debootstrap \
+    --exclude=repo \
+    --exclude='proc/*' \
+    --exclude='dev/*' \
+    --exclude='var/cache/apt/archives/*.deb' \
+    --exclude='var/cache/apt/archives/partial/*.deb' \
+    --owner root --group root \
+    *
+)
+
+mkdir proc
+tar rf "$OUTFILE" --owner root --group root proc
+rmdir proc
+
+if [ -n "$full_dev" ]; then
+    tar Af "$OUTFILE" /usr/lib/cross-shell/devs.tar
+else
+    tar Af "$OUTFILE" /usr/lib/cross-shell/min-devs.tar
+fi
+
+echo "done!"
