@@ -1,11 +1,11 @@
-cross-shell (0.2.2) unstable; urgency=low
+cross-shell (0.2.2) asimov; urgency=low
 
   * First buid for IPlinux:
   * slind-control package merged in:
     - cross-bs removed
     - sc-bootstrap-{host,target} are renamed to cross-bootstrap-{host,target}
 
- -- Mikhail Gusarov <dottedmag@dottedmag.net>  Tue, 10 Mar 2009 02:19:06 +0600
+ -- Mikhail Gusarov <dottedmag@dottedmag.net>  Tue, 10 Mar 2009 13:34:32 +0600
 
 cross-shell (0.2.1.oi4) asimov; urgency=low
 
