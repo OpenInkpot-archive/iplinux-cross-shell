@@ -1,6 +1,7 @@
-cross-shell (0.2.3) UNRELEASED; urgency=low
+cross-shell (0.2.3) asimov; urgency=low
 
   * Fixed undefined 'yell' function in cross-pack-rootfs.
+  * Fixed overwriting apt.conf from the package.
 
  -- Mikhail Gusarov <dottedmag@dottedmag.net>  Fri, 13 Mar 2009 16:19:12 +0600
 
