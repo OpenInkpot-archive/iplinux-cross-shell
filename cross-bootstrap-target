@@ -62,7 +62,7 @@ try_bind_mount $HOST_ARCHIVES $ARCHIVES
 echo "127.0.0.1 localhost localhost.localdomain" > $ROOTFS/etc/hosts
 
 echo "deb $REPO $SUITE core security gui media" > $ROOTFS/etc/apt/sources.list
-echo "APT::Architecture \"$ARCH\";" > $ROOTFS/etc/apt/apt.conf
+echo "APT::Architecture \"$ARCH\";" >> $ROOTFS/etc/apt/apt.conf
 if [ -n "$http_proxy" ]; then
     echo "Acquire::http::Proxy \"$http_proxy\";" >> $ROOTFS/etc/apt/apt.conf
 fi
