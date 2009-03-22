@@ -44,7 +44,7 @@ HOST_ARCHIVES=/var/cache/apt/archives-$ARCH
 
 $ROOT_CMD mkdir -p $HOST_ARCHIVES
 $ROOT_CMD chown -R $UID:$GID $HOST_ARCHIVES
-mkdir -p $ARCHIVES
+mkdir -p $ARCHIVES/partial
 
 try_bind_mount $HOST_ARCHIVES $ARCHIVES
 

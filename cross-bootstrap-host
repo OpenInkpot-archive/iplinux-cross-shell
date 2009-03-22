@@ -34,7 +34,7 @@ ARCHIVES=$ROOTFS/var/cache/apt/archives
 HOST_ARCHIVES=/var/cache/apt/archives
 
 $ROOT_CMD mkdir -p $HOST_ARCHIVES
-$ROOT_CMD mkdir -p $ARCHIVES
+$ROOT_CMD mkdir -p $ARCHIVES/partial
 
 try_bind_mount $HOST_ARCHIVES $ARCHIVES
 
