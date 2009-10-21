@@ -47,6 +47,8 @@ if [ ! -d "$WHERE" ]; then
     exit 1
 fi
 
+cross-shell $ARCH apt-get remove fakechroot-cross-target-helper
+
 echo "=== pack rootfs ==="
 
 (cd "$WHERE";
@@ -70,5 +72,7 @@ if [ -n "$full_dev" ]; then
 else
     tar Af "$OUTFILE" /usr/lib/cross-shell/min-devs.tar
 fi
+
+cross-shell $ARCH apt-get install fakechroot-cross-target-helper
 
 echo "done!"
