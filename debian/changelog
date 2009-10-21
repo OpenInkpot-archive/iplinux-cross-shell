@@ -1,3 +1,9 @@
+cross-shell (0.2.6) asimov; urgency=low
+
+  * Add -y --force-yes to apt invocation.
+
+ -- Mikhail Gusarov <dottedmag@dottedmag.net>  Thu, 22 Oct 2009 05:55:40 +0700
+
 cross-shell (0.2.5) asimov; urgency=low
 
   * Use fakechroot-cross-target-helper for easier diversion of tools
