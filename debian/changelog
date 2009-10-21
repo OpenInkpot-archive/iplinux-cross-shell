@@ -1,3 +1,10 @@
+cross-shell (0.2.5) asimov; urgency=low
+
+  * Use fakechroot-cross-target-helper for easier diversion of tools
+    useless in development chroot.
+
+ -- Mikhail Gusarov <dottedmag@dottedmag.net>  Thu, 22 Oct 2009 05:48:01 +0700
+
 cross-shell (0.2.4) asimov; urgency=low
 
   * Added missing /var/cache/apt/archives to the rootfs.
