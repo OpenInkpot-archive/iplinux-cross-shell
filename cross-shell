@@ -54,4 +54,23 @@ case $HOSTARCH in
     *)     echo "Unknown dynamic linker for $HOSTARCH" >&2; exit 1;;
 esac
 
+# Mount every local repository in the chroot's sources.list file that doesn't 
+# exist in the chroot file system.
+
+# All the local repositories mentioned in chroot's sources.list file
+
+for local_repo in $local_repos; do
+    
+    # If the directory doesn't exist in the chroot file system
+    if [ ! -e "$WHERE$local_repo" ]; then
+        
+        # If the directory does exist in the exterior file system
+        if [ -d "$local_repo" ]; then
+            
+            # Make a mount dir and mount the exterior repository dir to it
+            try_mount_repo "$WHERE" "$local_repo"
+        fi
+    fi
+done
+
 $FAKECHROOT_CROSS$DYLINKER --library-path $FAKECHROOT_CROSS/usr/local/lib:$FAKECHROOT_CROSS/lib:$FAKECHROOT_CROSS/usr/lib $FAKECHROOT_CROSS/bin/busybox chroot $WHERE "$@"

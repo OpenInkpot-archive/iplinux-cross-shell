@@ -1,14 +1,63 @@
 # -*- mode: sh -*-
 
-try_bind_umount() {
+temp_dirs=
+mount_points=
+
+# Unmount all directories mounted by cross-shell and delete all temporary 
+# directories created by cross-shell
+unmount_all() {
     RET=$?
-    while $ROOT_CMD umount $_shared_mounts_MOUNTPOINT 2>/dev/null; do :; done
+    
+    for _mount_point in $mount_points; do
+        
+        # If the mount point is still mounted
+        if fgrep -q "$_mount_point" < /etc/mtab; then
+            
+            # Unmount it
+            $ROOT_CMD umount "$_mount_point"
+        fi
+    done
+    
+    for _temp_dir in $temp_dirs; do
+        
+        # Remove the temp dir and any empty parent dirs
+        $ROOT_CMD rmdir -p "$_temp_dir" 2> /dev/null || :
+    done
     return $RET
 }
 
 try_bind_mount() {
-    fgrep -q $2 < /etc/mtab || $ROOT_CMD mount --bind $1 $2
+    _old_path=$1
+    _new_path=$2
+    
+    if ! fgrep -q $_new_path < /etc/mtab; then
+        $ROOT_CMD mount --bind $_old_path $_new_path
+    fi
+    
+    mount_points="$mount_points $_new_path"
+    trap unmount_all 0 INT QUIT KILL TERM
+}
 
-    _shared_mounts_MOUNTPOINT=$2
-    trap try_bind_umount 0 INT QUIT KILL TERM
+try_mount_repo() {
+    _chroot_path=$1
+    _local_rep=$2
+    
+    # Strip any meaningless trailing dots and slashes from the chroot path
+    _trimmed_chroot_path=$(echo "$_chroot_path" | sed 's|/\.\?$||')
+    
+    # If the local repo directory isn't already mounted
+    if ! fgrep -q "$_trimmed_chroot_path$_local_rep" < /etc/mtab; then
+        
+        # Make a mount dir within chroot and mount the local repo dir to it
+        $ROOT_CMD mkdir -p "$_trimmed_chroot_path$_local_rep"
+        $ROOT_CMD mount --bind "$_local_rep" "$_trimmed_chroot_path$_local_rep"
+        
+        # Add local repo to list of mount points and list of temp dirs
+        mount_points="$mount_points $_trimmed_chroot_path$_local_rep"
+        temp_dirs="$temp_dirs $_trimmed_chroot_path$_local_rep"
+        
+        # Call unmount_repos to clean up the local repos when the script is 
+        # exited or interrupted
+        trap unmount_all 0 INT QUIT KILL TERM
+    fi
 }
