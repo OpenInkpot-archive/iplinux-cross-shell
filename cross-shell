@@ -58,6 +58,7 @@ esac
 # exist in the chroot file system.
 
 # All the local repositories mentioned in chroot's sources.list file
+local_repos=$(egrep -o '(file:[^[:space:]]+)' < "$CHROOT_PATH/etc/apt/sources.list" | sed 's/file://')
 
 for local_repo in $local_repos; do
     
