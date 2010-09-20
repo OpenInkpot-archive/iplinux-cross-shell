@@ -2,7 +2,7 @@ echo "ERROR: set up /etc/cross-shell/config first." >&2
 exit 1
 
 # IPlinux archive suite
-SUITE=asimov
+SUITE=zelazny
 
 # IPlinux repository URL
 REPO=http://ftp.iplinux.org/iplinux/
