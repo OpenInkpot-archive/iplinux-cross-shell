@@ -1,3 +1,10 @@
+cross-shell (0.2.7) zelazny; urgency=low
+
+  * /rootfs-$host and /rootfs-$target now can be created in $ROOTFS_PATH
+  * update "suite" in this changelog and default config
+
+ -- Alexander V. Nikolaev <avn@daemon.hole.ru>  Mon, 20 Sep 2010 21:29:01 +0300
+
 cross-shell (0.2.6) asimov; urgency=low
 
   * Add -y --force-yes to apt invocation.
