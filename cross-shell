@@ -31,7 +31,7 @@ fi
 ARCH=$1
 shift
 
-WHERE=/rootfs-$ARCH
+WHERE=$ROOTFS_PATH/rootfs-$ARCH
 
 if ! [ -d $WHERE ]; then
     echo "rootfs directory does not exist: $WHERE."
@@ -39,7 +39,7 @@ if ! [ -d $WHERE ]; then
 fi
 
 HOSTARCH=$(dpkg --print-architecture)
-FAKECHROOT_CROSS=/rootfs-$HOSTARCH
+FAKECHROOT_CROSS=$ROOTFS_PATH/rootfs-$HOSTARCH
 CROSS_SHELL_ARCH=$ARCH
 PATH=/usr/sbin:/sbin:${PATH}
 LD_PRELOAD=/usr/lib/fakechroot-cross/libfakechroot-cross.so:/usr/lib/libfakeroot/libfakeroot-sysv.so

@@ -40,7 +40,7 @@ else
     fi
 fi
 
-WHERE="/rootfs-$ARCH"
+WHERE="$ROOTFS_PATH/rootfs-$ARCH"
 
 if [ ! -d "$WHERE" ]; then
     echo "ERROR: /rootfs-$ARCH does not exist or not a directory" 2>&1

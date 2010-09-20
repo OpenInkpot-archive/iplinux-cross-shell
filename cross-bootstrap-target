@@ -19,13 +19,13 @@ if [ -z "$HOSTARCH" ]; then
     exit 1
 fi
 
-if [ ! -d "/rootfs-$HOSTARCH" ]; then
-    echo "ERROR: /rootfs-$HOSTARCH does not exist, unable to perform a cross-bootstrap."
+if [ ! -d "$ROOTFS_PATH/rootfs-$HOSTARCH" ]; then
+    echo "ERROR: $ROOTFS_PATH/rootfs-$HOSTARCH does not exist, unable to perform a cross-bootstrap."
     echo "ERROR: run cross-bootstrap-host before."
     exit 1
 fi
 
-ROOTFS=/rootfs-$ARCH
+ROOTFS=$ROOTFS_PATH/rootfs-$ARCH
 
 if [ -e "$ROOTFS" ]; then
     echo "ERROR: $ROOTFS already exists. Delete it before running $PROG."
@@ -50,7 +50,7 @@ try_bind_mount $HOST_ARCHIVES $ARCHIVES
 
 (
     PATH=$PATH:/usr/sbin:/sbin
-    FAKECHROOT_CROSS=/rootfs-$HOSTARCH
+    FAKECHROOT_CROSS=$ROOTFS_PATH/rootfs-$HOSTARCH
     CROSS_SHELL_ARCH=$ARCH
     LD_PRELOAD=/usr/lib/fakechroot-cross/libfakechroot-cross.so
     LD_PRELOAD=$LD_PRELOAD:/usr/lib/libfakeroot/libfakeroot-sysv.so
