@@ -20,7 +20,7 @@ if [ -z "$HOSTARCH" ]; then
     exit 1
 fi
 
-ROOTFS="$ROOTFS_PATH/rootfs-$HOSTARCH"
+ROOTFS="$ROOTFS_PATH/rootfs-HOST-$HOSTARCH"
 if [ -e "$ROOTFS" ]; then
     echo "ERROR: $ROOTFS already exists. Delete it before running $PROG."
     exit 1

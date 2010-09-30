@@ -39,7 +39,7 @@ if ! [ -d $WHERE ]; then
 fi
 
 HOSTARCH=$(dpkg --print-architecture)
-FAKECHROOT_CROSS=$ROOTFS_PATH/rootfs-$HOSTARCH
+FAKECHROOT_CROSS=$ROOTFS_PATH/rootfs-HOST-$HOSTARCH
 CROSS_SHELL_ARCH=$ARCH
 PATH=/usr/sbin:/sbin:${PATH}
 LD_PRELOAD=/usr/lib/fakechroot-cross/libfakechroot-cross.so:/usr/lib/libfakeroot/libfakeroot-sysv.so
